@@ -1,7 +1,6 @@
 #!/usr/bin/python3
 from tkinter import Tk, BOTH, Canvas
 
-
 class Point:
     def __init__(self, x = 0, y = 0):
         self.x_ = x
@@ -45,7 +44,6 @@ class Window:
 
     def draw_line(self, line_instance, fill_color):
         line_instance.draw(self.__canvas, fill_color)
-
 
 class Cell:
     def __init__(self, window, point1=Point(), point2=Point()):
@@ -94,38 +92,34 @@ class Cell:
         line_to_cell = Line(mid_point, to_cell_midPoint)
         self._win.draw_line(line_to_cell,line_color)
 
-        
-
-        
-
-
 def main():
     win = Window(800, 600)
 
     cell_hor = 3
-    
+
 
     #draw line
     point1_ = Point(10, 10)
     point2_ = Point(40,40)
 
-    cell1 = Cell(win, point1_, point2_)
-    cell1.has_right_wall = False
-    cell1.draw()
+    home_cell = Cell(win, point1_, point2_)
+    home_cell.has_right_wall = False
+    home_cell.draw()
 
-    point1_ = Point(50, 10)
-    point2_ = Point(80, 40)
-    cell2 = Cell(win, point1_, point2_)
-    cell2.has_left_wall = False
-    cell2.has_right_wall = False
-    cell2.draw()
+    cells = []
 
-    cell1.draw_move(cell2)
+    for i in range(cell_hor):
+        point1_.x_ += 30
+        point2_.x_ += 30
+        cell2 = Cell(win, point1_, point2_)
+        cell2.has_left_wall = False
+        cell2.has_right_wall = False
+        cells.append(cell2)
+        cell2.draw()
+
+    home_cell.draw_move(cells[-1])
 
     win.wait_for_close()
-
-
-
 
 if __name__ == "__main__":
     main()
