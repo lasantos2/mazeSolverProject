@@ -2,48 +2,69 @@ import time
 from graphics import *
 
 class Cell:
-    def __init__(self, window = None, point1=Point(), point2=Point()):
+    def __init__(self, window = None):
         self.has_left_wall = True
         self.has_right_wall = True
         self.has_top_wall = True
         self.has_bottom_wall = True
 
-        self._x1 = point1.x_
-        self._x2 = point2.x_
-        self._y1 = point1.y_
-        self._y2 = point2.y_
+        self._x1 = None
+        self._x2 = None
+        self._y1 = None
+        self._y2 = None
         self._win = window
+        
 
-    def draw(self):
-        top_left = Point(self._x1, self._y2)
-        bottom_left = Point(self._x1,self._y1)
-        bottom_right = Point(self._x2,self._y1)
-        top_right = Point(self._x2, self._y2)
+    def draw(self,x1,y1,x2,y2):
+
+
+        self._x1 = x1
+        self._x2 = x2
+        self._y1 = y1
+        self._y2 = y2
+
+        top_left = Point(x1, y1)
+        bottom_left = Point(x1,y2)
+        bottom_right = Point(x2,y2)
+        top_right = Point(x2, y1)
+
+        if self._win == None:
+            return
 
         if self.has_left_wall:
             line = Line(top_left, bottom_left)
-            if self._win != None:
-                self._win.draw_line(line,"Black")
+            self._win.draw_line(line,"Black")
+        else:
+            line = Line(top_left, bottom_left)
+            self._win.draw_line(line,"#D8D9D8")
 
         if self.has_right_wall:
             line = Line(top_right, bottom_right)
-            if self._win != None:
-                self._win.draw_line(line,"Black")
+
+            self._win.draw_line(line,"Black")
+        else:
+            line = Line(top_right, bottom_right)
+            self._win.draw_line(line,"#D8D9D8")
 
         if self.has_top_wall:
             line = Line(top_left, top_right)
-            if self._win != None:
-                self._win.draw_line(line,"Black")
+
+            self._win.draw_line(line,"Black")
+        else:
+            line = Line(top_left, top_right)
+            self._win.draw_line(line,"#D8D9D8")
 
         if self.has_bottom_wall:
             line = Line(bottom_left, bottom_right)
-            if self._win != None:
-                self._win.draw_line(line,"Black")
+            self._win.draw_line(line,"Black")
+        else:
+            line = Line(bottom_left, bottom_right)
+            self._win.draw_line(line,"#D8D9D8")
 
     def draw_move(self, to_cell, undo=False):
         line_color = "Red"
         if undo:
-            line_color = "Gray"
+            line_color = "#D8D9D8"
 
         mid_point = Point((self._x2 + self._x1)/2, (self._y1 + self._y2) / 2)
 
@@ -71,37 +92,46 @@ class Maze:
             self._cell_size_x = cell_size_x
             self._cell_size_y = cell_size_y
             self._win = win
+            self._cells = []
 
             self._create_cells()
+            self._break_entrance_and_exit()
 
     def _create_cells(self):
-        self._cells = []
+        for i in range(self._num_cols):
+            column_cells = []
+            for j in range(self._num_rows):
+                column_cells.append(Cell(self._win))
+            self._cells.append(column_cells)
 
         for i in range(self._num_cols):
-            self._cells.append([])
             for j in range(self._num_rows):
-                self._cells[i].append("cell")
-                self._draw_cell(i, j)
+                self._draw_cell(i,j)
+        
 
     def _draw_cell(self, i, j):
 
         if self._win is None:
             return
-        currcel_x = self._x1 + (self._cell_size_x) * i
-        curr_cell_y = self._y1 + (self._cell_size_y) * j
 
-        curr_point_top_left = Point(currcel_x, curr_cell_y + self._cell_size_y)
-        curr_point_bottom_right = Point(currcel_x + self._cell_size_x, curr_cell_y)
+        x1 = self._x1 + (self._cell_size_x) * i
+        y1 = self._y1 + (self._cell_size_y) * j
+        y2 = y1 + self._cell_size_y
+        x2 = x1 + self._cell_size_x
 
-        curr_cell = Cell(self._win, curr_point_top_left, curr_point_bottom_right)
+        self._cells[i][j].draw(x1,y1,x2,y2)
 
-        self._cells[i][j] = curr_cell
-        self._cells[i][j].draw()
-
-        # print("columns: " + str(len(self._cells)))
-        # print("row: " + str(len(self._cells[i])))
+        
 
         self._animate()
+
+    def _break_entrance_and_exit(self):
+
+        self._cells[0][0].has_top_wall = False
+        self._draw_cell(0,0)
+
+        self._cells[-1][-1].has_bottom_wall = False
+        self._draw_cell(self._num_cols - 1,self._num_rows - 1)
 
 
     def _animate(self):
