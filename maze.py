@@ -1,5 +1,5 @@
 import time
-from line import *
+from graphics import *
 
 class Cell:
     def __init__(self, window = None, point1=Point(), point2=Point()):
@@ -22,19 +22,23 @@ class Cell:
 
         if self.has_left_wall:
             line = Line(top_left, bottom_left)
-            self._win.draw_line(line,"Black")
+            if self._win != None:
+                self._win.draw_line(line,"Black")
 
         if self.has_right_wall:
             line = Line(top_right, bottom_right)
-            self._win.draw_line(line,"Black")
+            if self._win != None:
+                self._win.draw_line(line,"Black")
 
         if self.has_top_wall:
             line = Line(top_left, top_right)
-            self._win.draw_line(line,"Black")
+            if self._win != None:
+                self._win.draw_line(line,"Black")
 
         if self.has_bottom_wall:
             line = Line(bottom_left, bottom_right)
-            self._win.draw_line(line,"Black")
+            if self._win != None:
+                self._win.draw_line(line,"Black")
 
     def draw_move(self, to_cell, undo=False):
         line_color = "Red"
@@ -46,7 +50,8 @@ class Cell:
         to_cell_midPoint = Point((to_cell._x2 + to_cell._x1) / 2, (to_cell._y1 + to_cell._y2)/2)
 
         line_to_cell = Line(mid_point, to_cell_midPoint)
-        self._win.draw_line(line_to_cell,line_color)
+        if self._win != None:
+            self._win.draw_line(line_to_cell,line_color)
 
 class Maze:
     def __init__(
@@ -80,6 +85,8 @@ class Maze:
 
     def _draw_cell(self, i, j):
 
+        if self._win is None:
+            return
         currcel_x = self._x1 + (self._cell_size_x) * i
         curr_cell_y = self._y1 + (self._cell_size_y) * j
 
@@ -98,6 +105,7 @@ class Maze:
 
 
     def _animate(self):
-        self._win.redraw()
-        time.sleep(0.05)
+        if self._win != None:
+            self._win.redraw()
+            time.sleep(0.05)
     
