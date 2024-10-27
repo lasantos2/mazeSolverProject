@@ -196,9 +196,6 @@ class Maze:
             
 
     def solve(self):
-        print("Trying to solve")
-        print("Goal visited?: " + str(self._cells[self._num_cols-1][self._num_rows - 1]._visited))
-        
         if self._solve_r(0,0):
             return True
         
@@ -210,12 +207,10 @@ class Maze:
         self._cells[i][j]._visited = True
 
         if self._cells[i][j] == self._cells[self._num_cols-1][self._num_rows - 1]:
-            print("reached Goal")
             return True
 
         #left
         if i > 0 and not self._cells[i-1][j].has_right_wall and not self._cells[i-1][j]._visited:
-            print("Move Right")
             self._cells[i][j].draw_move(self._cells[i-1][j])
             if self._solve_r(i-1, j):
                 return True
@@ -223,7 +218,6 @@ class Maze:
 
         #left
         if i < self._num_cols - 1 and not self._cells[i + 1][j].has_left_wall and not self._cells[i+1][j]._visited:
-            print("Move Left")
             self._cells[i][j].draw_move(self._cells[i+1][j])
             if self._solve_r(i+1, j):
                 return True
@@ -231,7 +225,6 @@ class Maze:
 
         #down
         if j < self._num_rows - 1 and not self._cells[i][j+1].has_top_wall and not self._cells[i][j + 1]._visited:
-            print("Move Up")
             self._cells[i][j].draw_move(self._cells[i][j+1])
             if self._solve_r(i, j+1):
                 return True
@@ -239,7 +232,6 @@ class Maze:
 
         #up
         if j > 0 and not self._cells[i][j - 1].has_bottom_wall and not self._cells[i][j - 1]._visited:
-            print("Move Down")
             self._cells[i][j].draw_move(self._cells[i][j - 1])
             if self._solve_r(i, j - 1):
                 return True

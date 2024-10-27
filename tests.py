@@ -86,8 +86,7 @@ class Tests(unittest.TestCase):
         m1._break_walls_r(0,0)
 
         m1._reset_cells_visited()
-
-
+        
         for i in m1._cells:
             for j in i:
                 self.assertEqual(
